@@ -7,6 +7,9 @@ import {Route} from 'react-router-dom'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Postdetails from './pages/Postdetails'
+import Createpost from './pages/Createpost'
+import Editpost from './pages/editPost'
+import Profile from './pages/Profile'
 function App() {
   return (
     <div className="min-h-screen flex flex-col bg-[#fdfdfd]">
@@ -17,6 +20,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/posts/post/:id" element={<Postdetails />} />
+          <Route path="/write" element={<Createpost />} />
+          <Route path="/edit/:id" element={<Editpost />} />
+          <Route path="/profile/:id" element={<Profile />} />
         </Routes>
       </main>
       <Footer />
