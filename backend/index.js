@@ -1,26 +1,33 @@
+const express = require('express');
 require('dotenv').config();
-const express=require('express');
-const { default: mongoose } = require('mongoose');
-const app=express();
+const cookieParser = require('cookie-parser');
+const app = express();
+const cors = require('cors');
+
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
+app.use(express.json());
+app.use(cookieParser());
+const connectDb = require('./db');
+console.log("JWT_SECRET:", process.env.JWT_SECRET);
+connectDb();
+const authRoute = require('./routes/auth');
+app.use('/api/auth', authRoute);
+const usersRoute = require('./routes/users');
+app.use('/api/users', usersRoute);
+const postRoute = require('./routes/posts');
+app.use('/api/posts', postRoute);
+const commentRoute = require('./routes/comments');
+app.use('/api/comments', commentRoute);
 
 
-const connectDb=async()=>{
-    try{
-        await mongoose.connect(process.env.MONGO_URL);
-        console.log('Database connected successfully');
-    }
-    catch(err){
-        console.error('Database connection failed',err);
-    }
-}
 
 
-// Middleware
 
-app.get('/',(req,res)=>{
-    res.send('Hello World!');
-});
-app.listen(process.env.port,()=>{
-    connectDb();
-    console.log(`Server is running on http://localhost:${process.env.port}`);
+
+
+app.listen(process.env.port, () => {
+  console.log(`Server is running on port ${process.env.port}`);
 });
