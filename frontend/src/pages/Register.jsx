@@ -22,14 +22,11 @@ const Register = () => {
       email,
       password,
     });
-    setUsername(res.data.username);
-    setEmail(res.data.email);
-    setPassword(res.data.password);
-    setConfirmPassword(res.data.confirmPassword);
     console.log(res.data);
     setError(false); // clear error on success
     navigate('/login');
   } catch (err) {
+    setError(true);
     console.error(err);
   }
 };
@@ -93,10 +90,11 @@ const Register = () => {
             />
           </div>
 
-          <button onClick={handleRegister} className='bg-[#000000] w-fit font-medium rounded-lg flex justify-center items-center'>
+          <button onClick={handleRegister} className='bg-[#000000] mb-1 cursor-pointer w-fit font-medium rounded-lg flex justify-center items-center active:scale-95 active:bg-gray-600 hover:bg-gray-800'>
             <p className='p-2 text-white'>Register</p>
           </button>
-
+          {error && <span className='text-red-500 mt-2'>Something went wrong! Please try again.</span>}
+          already have an account? <span onClick={() => navigate('/login')} className='text-blue-500 cursor-pointer'>Login</span>
         </div>
       </div>
     </div>

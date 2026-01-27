@@ -1,24 +1,42 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { CiSearch } from "react-icons/ci"
-import { HiOutlineMenu, HiX } from "react-icons/hi"
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { CiSearch } from "react-icons/ci";
+import { HiOutlineMenu, HiX } from "react-icons/hi";
+import axios from "axios";
+
+import { UserContext } from "../context/UserContent";
+import { URL } from "../url";
+
 
 const Navbar = () => {
-  const user = false
-  const [open, setOpen] = useState(false)
+  const { user, getUser, setUser } = useContext(UserContext);
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const res=await axios.get(`${URL}api/auth/logout`, { withCredentials: true });
+      setUser(null);
+      setOpen(false);
+      navigate("/login");
+      console.log("Logged out successfully");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="fixed top-5 left-2 right-2 z-10">
       <div className="flex items-center justify-between md:w-[70%] mx-auto px-4 py-2 bg-white/10 backdrop-blur-sm rounded-4xl shadow-md">
 
         {/* Logo */}
-        <h1 className="text-lg md:text-3xl font-bold F">
+        <h1 className="F text-lg md:text-3xl font-bold">
           <Link to="/">Quill</Link>
         </h1>
 
-        {/* Search (hidden on very small screens) */}
+        {/* Search */}
         <div className="hidden md:flex items-center space-x-1 px-2 py-1 bg-neutral-100/60 backdrop-blur-sm rounded-3xl shadow-sm">
-          <CiSearch className='h-10' />
+          <CiSearch className="h-6 w-6" />
           <input
             type="text"
             className="outline-none px-2 py-1 bg-transparent"
@@ -26,21 +44,28 @@ const Navbar = () => {
           />
         </div>
 
-        {/* Desktop Links */}
+        {/* Desktop Menu */}
         <div className="hidden md:flex gap-6 items-center">
           {user ? (
-            <Link to="/write">Write</Link>
+            <>
+              <Link to="/write">Write</Link>
+              <Link to="/profile">Profile</Link>
+              <button
+                onClick={handleLogout}
+                className="text-red-500 hover:text-red-600"
+              >
+                Logout
+              </button>
+            </>
           ) : (
-            <Link to="/login">Login</Link>
-          )}
-          {user ? (
-            <Link to="/profile">Profile</Link>
-          ) : (
-            <Link to="/register">Register</Link>
+            <>
+              <Link to="/login">Login</Link>
+              <Link to="/register">Register</Link>
+            </>
           )}
         </div>
 
-        {/* Hamburger (mobile only) */}
+        {/* Mobile Toggle */}
         <button
           className="md:hidden text-2xl"
           onClick={() => setOpen(!open)}
@@ -53,19 +78,26 @@ const Navbar = () => {
       {open && (
         <div className="md:hidden mt-2 mx-2 bg-white/90 backdrop-blur-sm rounded-2xl shadow-md p-4 flex flex-col gap-4">
           {user ? (
-            <Link to="/write" onClick={() => setOpen(false)}>Write</Link>
+            <>
+              <Link to="/write" onClick={() => setOpen(false)}>Write</Link>
+              <Link to="/profile" onClick={() => setOpen(false)}>Profile</Link>
+              <button
+                onClick={handleLogout}
+                className="text-red-500 text-left"
+              >
+                Logout
+              </button>
+            </>
           ) : (
-            <Link to="/login" onClick={() => setOpen(false)}>Login</Link>
-          )}
-          {user ? (
-            <Link to="/profile" onClick={() => setOpen(false)}>Profile</Link>
-          ) : (
-            <Link to="/register" onClick={() => setOpen(false)}>Register</Link>
+            <>
+              <Link to="/login" onClick={() => setOpen(false)}>Login</Link>
+              <Link to="/register" onClick={() => setOpen(false)}>Register</Link>
+            </>
           )}
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

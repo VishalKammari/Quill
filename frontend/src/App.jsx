@@ -10,9 +10,11 @@ import Postdetails from './pages/Postdetails'
 import Createpost from './pages/Createpost'
 import Editpost from './pages/editPost'
 import Profile from './pages/Profile'
+import { UserContextProvider } from './context/UserContent'
+
 function App() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#fdfdfd]">
+    <UserContextProvider className="min-h-screen flex flex-col bg-[#fdfdfd]">
       <Navbar />
       <main className="flex-grow pt-20">
         <Routes>
@@ -26,7 +28,7 @@ function App() {
         </Routes>
       </main>
       <Footer />
-    </div>
+    </UserContextProvider>
   )
 }
 

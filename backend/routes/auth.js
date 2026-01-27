@@ -35,7 +35,7 @@ router.post('/login', async (req, res) => {
     }
     
     const token = jwt.sign(
-      { id: user1._id },
+      { id: user1._id,username: user1.username,email: user1.email },
       process.env.JWT_SECRET,
       { expiresIn: '3d' }
     );
@@ -61,6 +61,17 @@ router.get('/logout',async(req,res)=>{
     }
 });
 
+
+//refech users
+router.get('/refetch',async(req,res)=>{
+    const token=req.cookies.token;
+    jwt.verify(token,process.env.JWT_SECRET,async(err,decoded)=>{
+        if(err){
+            return res.status(401).json("Unauthorized");
+        }
+        res.status(200).json(decoded);
+    });
+});
 
 
 module.exports=router;
