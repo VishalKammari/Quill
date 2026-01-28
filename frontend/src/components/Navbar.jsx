@@ -12,7 +12,7 @@ const Navbar = () => {
   const { user, getUser, setUser } = useContext(UserContext);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-
+  const[prompt,setPrompt]=useState("");
   const handleLogout = async () => {
     try {
       const res=await axios.get(`${URL}api/auth/logout`, { withCredentials: true });
@@ -25,6 +25,14 @@ const Navbar = () => {
     }
   };
 
+  const handleUrl = () => {
+  if (!prompt.trim()) {
+    navigate("/");
+  } else {
+    navigate(`/?search=${prompt}`);
+  }
+};
+
   return (
     <div className="fixed top-5 left-2 right-2 z-10">
       <div className="flex items-center justify-between md:w-[70%] mx-auto px-4 py-2 bg-white/10 backdrop-blur-sm rounded-4xl shadow-md">
@@ -36,11 +44,23 @@ const Navbar = () => {
 
         {/* Search */}
         <div className="hidden md:flex items-center space-x-1 px-2 py-1 bg-neutral-100/60 backdrop-blur-sm rounded-3xl shadow-sm">
-          <CiSearch className="h-6 w-6" />
-          <input
-            type="text"
-            className="outline-none px-2 py-1 bg-transparent"
-            placeholder="Search"
+  
+        <CiSearch
+          className="h-6 w-6 cursor-pointer"
+          onClick={handleUrl}
+        />
+
+        <input
+          type="text"
+          className="outline-none px-2 py-1 bg-transparent"
+          placeholder="Search"
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleUrl();
+          }
+          }}
           />
         </div>
 

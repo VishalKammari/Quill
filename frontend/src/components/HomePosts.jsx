@@ -22,12 +22,12 @@ function HomePosts({ post }) {
 
           <div className="flex flex-wrap items-center gap-4 text-xs md:text-sm lg:text-base font-medium text-gray-500 mb-3 lg:mb-5">
             <p>@{post.username}</p>
-            <p>{post.date}</p>
-            <p>{post.time}</p>
+            <p>{(new Date(post.updatedAt)).toLocaleDateString()}</p>
+            <p>{(new Date(post.updatedAt)).toLocaleTimeString()}</p>
           </div>
 
           <p className="text-sm md:text-base lg:text-lg leading-relaxed text-gray-700">
-            {post.desc}
+            {post.desc.slice(0, 150)} <button className='text-blue-400 cursor-pointer'>readmore ...</button>
           </p>
         </div>
 
