@@ -9,17 +9,21 @@ export const UserContextProvider = ({ children }) => {
         getUser();
     },[]);
 
-    const getUser=async()=>{
-        try{
-            const res=await axios.get(`${URL}api/auth/refetch`,{withCredentials:true});
-            const data=res.data;
-            //console.log("User refreshed:",data);
-            setUser(data);
-        }
-        catch(err){
-            console.log(err);
-        }
+    const getUser = async () => {
+  try {
+    const res = await axios.get(
+      `${URL}api/auth/refetch`,
+      { withCredentials: true }
+    );
+    setUser(res.data);
+  } catch (err) {
+    if (err.response?.status === 401) {
+      setUser(null); 
+    } else {
+      console.log(err);
     }
+  }
+};
     return (
     <UserContext.Provider value={{ user,setUser,getUser }}>
       {children}

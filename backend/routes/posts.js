@@ -45,11 +45,22 @@ router.delete('/:id',verifyToken, async (req, res) => {
   }
 });
 
+//GET POST DETAILS
+router.get('/:id', async (req, res) => {
+  try {
+    const foundPost = await post.findById(req.params.id);
+    console.log(foundPost);
+    res.status(200).json(foundPost);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 
 
 
 //get all posts 
-router.get('/',verifyToken, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const searchFilter = {title: { $regex: req.query.search || '', $options: 'i' }};
     const post1 = await post.find(searchFilter);

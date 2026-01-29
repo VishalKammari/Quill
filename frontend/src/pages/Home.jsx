@@ -43,7 +43,7 @@ function Home() {
       ) : (
         posts.map((post) => (
           posts.map((post) => (
-          <Link key={post._id} to={user ? `/post/${post._id}` : `/login`} className="block">
+          <Link key={post._id} to={user ? `/posts/post/${post._id}` : `/login`} className="block">
             <HomePosts post={post} />
            </Link>
           ))
