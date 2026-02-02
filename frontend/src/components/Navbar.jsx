@@ -72,7 +72,7 @@ const Navbar = () => {
               <Link to="/profile">Profile</Link>
               <button
                 onClick={handleLogout}
-                className="text-red-500 hover:text-red-600"
+                className="text-red-500 hover:text-red-600 cursor-pointer"
               >
                 Logout
               </button>

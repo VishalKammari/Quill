@@ -1,12 +1,21 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { CiEdit } from "react-icons/ci";
+import { IoSend } from "react-icons/io5";
+import { MdDeleteForever } from "react-icons/md";
+import { UserContext } from "../context/UserContent";
+import { useContext } from "react";
+import Loader from "../components/Loader";
 
 function Postdetails() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
+  const {user}=useContext(UserContext);
+  const[loader,setloader]=useState(false);
 
   useEffect(() => {
+    setloader(true);
     const fetchpost = async () => {
       try {
         const res = await axios.get(
@@ -14,6 +23,7 @@ function Postdetails() {
         );
         console.log(res.data);
         setPost(res.data);
+        setloader(false);
       } catch (err) {
         console.error(err.response?.data || err.message);
       }
@@ -31,12 +41,24 @@ function Postdetails() {
 
   return (
     <div className="px-4 md:px-6 md:w-[65%] mx-auto my-8">
-      <div className="p-4 md:p-6 shadow-lg rounded-2xl bg-white">
+      {loader?<Loader></Loader>:<div className="p-4 md:p-6 shadow-lg rounded-2xl bg-white">
 
         {/* Title */}
-        <h1 className="text-xl md:text-3xl font-bold text-gray-800 leading-snug">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl md:text-3xl font-bold text-gray-800 leading-snug">
           {post.title}
         </h1>
+        {user._id === post.userId &&
+        <div className='flex items-center justify-between space-x-4'>
+           <CiEdit className='text-2xl cursor-pointer hover:text-blue-600 ' />
+            <MdDeleteForever className='text-2xl cursor-pointer hover:text-red-600 ' /> 
+        </div>
+        }
+        
+
+        </div>
+        
+
 
         {/* Author + Date */}
         <p className="text-xs md:text-sm text-gray-500 mt-2">
@@ -62,7 +84,18 @@ function Postdetails() {
           {post.desc}
         </p>
 
-      </div>
+        <div className='flex items-center md:w-[65%]  mt-2 justify-start space-x-4 font-semibold'>
+            <p className='md:text-lg text-sm'>Categories:</p>
+            <div className='flex justify-center items-center space-x-2 '>
+              {post.categories?post.categories.map((cat) => (
+                <div key={cat} className='bg-gray-200 md:text-lg text-sm rounded-lg px-3 py-1 '>{cat}</div>
+              )):null}
+            </div>
+        </div>
+
+
+
+      </div>}
     </div>
   );
 }
@@ -97,9 +130,8 @@ export default Postdetails;
 
 // import { useParams } from "react-router-dom";
 // import { useEffect, useState } from "react";
-// import { MdDeleteForever } from "react-icons/md";
-// import { CiEdit } from "react-icons/ci";
-// import { IoSend } from "react-icons/io5";
+
+
 // import Comments from '../components/Comments.jsx';
 // import axios from 'axios';
 // import{URL} from '../url.js';
@@ -197,10 +229,7 @@ export default Postdetails;
 //       <div className='p-2 shadow-lg rounded-2xl'>
 //         <div className="flex text-xs md:w-[65%] mx-auto justify-between items-center ">
 //           <h1 className='text-xs font-bold md:text-2xl '>Lorem ipsum dolor sit amet consectetur.</h1>
-//           <div className='flex items-center justify-between space-x-5'>
-//             <CiEdit className='text-2xl cursor-pointer hover:text-blue-600 ' />
-//             <MdDeleteForever className='text-2xl cursor-pointer hover:text-red-600 ' /> 
-//           </div>
+//           
 //         </div>
 //         <div className='flex text-xs md:text-lg items-center font-semibold gap-3 mx-auto md:w-[65%] justify-start m-2 md:mt-4'>
 //           <p>@Vishal</p>
@@ -217,13 +246,7 @@ export default Postdetails;
 //           <div className='mx-auto md:w-[67%] flex justify-center'>
 //             <p className='md:px-3 md:text-lg text-justify'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea ab rem veritatis.Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus rem libero, similique labore adipisci eos.</p>
 //           </div>
-//           <div className='flex items-center md:w-[65%] mx-auto  mt-2 justify-start space-x-4 font-semibold'>
-//             <p className='md:text-lg text-sm'>Categories:</p>
-//             <div className='flex justify-center items-center space-x-2 '>
-//               <div className='bg-gray-200 md:text-lg text-sm rounded-lg px-3 py-1 '>Tech</div>
-//               <div className='bg-gray-200 md:text-lg text-sm rounded-lg px-3 py-1 '>AI</div>
-//             </div>
-//           </div>
+          
 //           {/* comments */}
 //           <div className='flex flex-col mt-4 md:w-[65%] w-full mx-auto space-y-2'>
 //             <h1 className='md:text-lg text-sm'>Comments:</h1>
