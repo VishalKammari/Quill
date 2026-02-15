@@ -19,8 +19,8 @@ const Login = () => {
             if(res.data){
                 console.log("Login Successful");
                 localStorage.setItem("token",res.data.token);
-                navigate("/");
                 setUser(res.data);
+                navigate("/");
             }
         }
         catch(err){

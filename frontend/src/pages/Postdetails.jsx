@@ -7,19 +7,25 @@ import { MdDeleteForever } from "react-icons/md";
 import { UserContext } from "../context/UserContent";
 import { useContext } from "react";
 import Loader from "../components/Loader";
+import { ImageFolder, URL } from "../url";
+import { useNavigate } from "react-router-dom";
+import Comment from "../components/Comments";
+import Comments from "../components/Comments";
 
 function Postdetails() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const {user}=useContext(UserContext);
   const[loader,setloader]=useState(false);
+  const navigate=useNavigate();
+  const [comments,setComments]=useState([])
 
   useEffect(() => {
     setloader(true);
     const fetchpost = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/posts/${id}`
+          `${URL}api/posts/${id}`
         );
         console.log(res.data);
         setPost(res.data);
@@ -32,12 +38,60 @@ function Postdetails() {
     fetchpost();
   }, [id]);
 
+
+  const fetchPostComments=async()=>{
+    setloader(true)
+    try{
+      const res=await axios.get(URL+"api/comments/posts/"+id ,{withCredentials:true})
+      setComments(res.data)
+      setloader(false)
+
+    }
+    catch(err){
+      setloader(false)
+      console.log(err)
+    }
+  }
+
+  useEffect(()=>{
+    fetchPostComments()
+
+  },[id])
+
   if (!post)
     return (
       <div className="flex justify-center items-center h-[60vh] text-gray-500">
         Loading post...
       </div>
     );
+
+
+    const handleDeletepost=async()=>{
+      try{
+        const res=await axios.delete(`${URL}api/posts/${id}`,{withCredentials:true})
+        console.log(res.data)
+        navigate("/")
+      }
+      catch(err){
+        console.log(err)
+      }
+    }
+
+    const postComment=async(e)=>{
+    e.preventDefault()
+    try{
+      const res=await axios.post(URL+"api/comments/create",
+      {comment:comments,author:user.username,postId:id,userId:user.id},
+      {withCredentials:true})
+    
+      window.location.reload(true)
+
+    }
+    catch(err){
+         console.log(err)
+    }
+
+  }
 
   return (
     <div className="px-4 md:px-6 md:w-[65%] mx-auto my-8">
@@ -48,10 +102,10 @@ function Postdetails() {
           <h1 className="text-xl md:text-3xl font-bold text-gray-800 leading-snug">
           {post.title}
         </h1>
-        {user._id === post.userId &&
+        {user.id === post.userId &&
         <div className='flex items-center justify-between space-x-4'>
-           <CiEdit className='text-2xl cursor-pointer hover:text-blue-600 ' />
-            <MdDeleteForever className='text-2xl cursor-pointer hover:text-red-600 ' /> 
+           <CiEdit onClick={()=>navigate('/edit'+id)} className='text-2xl cursor-pointer hover:text-blue-600 ' />
+            <MdDeleteForever onClick={handleDeletepost} className='text-2xl cursor-pointer hover:text-red-600 ' /> 
         </div>
         }
         
@@ -73,7 +127,7 @@ function Postdetails() {
         {/* Image */}
         {post.photo && (
           <img
-            src={post.photo}
+            src={ImageFolder+post.photo}
             alt="post"
             className="w-full rounded-xl mx-auto my-6 shadow-md"
           />
@@ -93,9 +147,22 @@ function Postdetails() {
             </div>
         </div>
 
+        <div className="flex flex-col mt-4">
+         <h3 className="mt-6 mb-4 font-semibold">Comments:</h3>
+         {comments && comments.map((c)=>(
+          <Comments key={c._id} c={c} post={post} />
+         ))}
+           
+         </div>
+
 
 
       </div>}
+
+      <div className="w-full flex flex-col mt-4 md:flex-row">
+          <input onChange={(e)=>setComments(e.target.value)} type="text" placeholder="Write a comment" className="md:w-[80%] outline-none py-2 px-4 mt-4 md:mt-0"/>
+          <button onClick={postComment} className="bg-black text-sm text-white px-2 py-2 md:w-[20%] mt-4 md:mt-0">Add Comment</button>
+      </div>
     </div>
   );
 }

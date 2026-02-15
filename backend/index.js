@@ -3,7 +3,10 @@ require('dotenv').config();
 const cookieParser = require('cookie-parser');
 const app = express();
 const cors = require('cors');
+
 const multer = require('multer');
+const path=require("path")
+app.use("/images",express.static(path.join(__dirname,"/images")))
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -24,46 +27,28 @@ const commentRoute = require('./routes/comments');
 app.use('/api/comments', commentRoute);
 
 
-//image upload
-const fs = require("fs");
-const path = require("path");
 
-if (!fs.existsSync("images")) {
-  fs.mkdirSync("images");
-}
+const storage=multer.diskStorage({
+    destination:(req,file,fn)=>{
+        fn(null,"images")
+    },
+    filename:(req,file,fn)=>{
+        // Use the client-provided filename so post.photo matches the saved file.
+        fn(null, req.body.img)
+    }
+})
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "images");
-  },
-  filename: function (req, file, cb) {
-    cb(null, 'image1.jpg');
-  },
-});
+const upload=multer({storage:storage})
+app.post("/api/upload",upload.single("file"),(req,res)=>{
+    // console.log(req.body)
+    res.status(200).json("Image has been uploaded successfully!")
+})
 
-const upload = multer({ storage });
-
-
-app.use("/images", express.static("images"));
-
-app.post("/api/upload", upload.single("file"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: "No file uploaded" });
-  }
-
-  res.status(200).json({
-    message: "File uploaded successfully",
-    filename: req.file.filename,
-    path: `/images/${req.file.filename}`,
-  });
-});
+app.get("/",(req,res)=>{
+    res.status(200).json("Server is running!")
+})
 
 
-
-
-
-
-
-app.listen(process.env.port, () => {
-  console.log(`Server is running on port ${process.env.port}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
 });

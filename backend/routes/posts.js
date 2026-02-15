@@ -7,16 +7,32 @@ const bcrypt = require('bcrypt');
 const verifyToken = require('../verifytoken');
 
 
-router.post('/create',verifyToken,async(req,res)=>{
+
+router.get('/user/:userId',verifyToken, async (req, res) => {
+  try {
+    const posts = await post.find({userId: req.params.userId});
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json("Internal server error");
+  }
+});
+
+
+
+router.post("/create",verifyToken,async (req,res)=>{
     try{
-        const newpost=new post(req.body);
-        const savedpost = await newpost.save();
-        res.status(200).json(savedpost);
+        const newpost = new post(req.body);
+        // console.log(req.body)
+        const savedPost=await newpost.save()
+        
+        res.status(200).json(savedPost)
     }
     catch(err){
-        res.status(500).json("Internal server error");
+        console.log(err)
+        res.status(500).json(err)
     }
-});
+     
+})
 
 //update
 router.put('/:id',verifyToken, async (req, res) => {
@@ -39,6 +55,7 @@ router.put('/:id',verifyToken, async (req, res) => {
 router.delete('/:id',verifyToken, async (req, res) => {
   try {
     await post.findByIdAndDelete(req.params.id);
+    await comment.deleteMany({postId: req.params.id});
     res.status(200).json("Post deleted successfully");
     } catch (err) {
     res.status(500).json("Internal server error");
@@ -72,14 +89,6 @@ router.get('/', async (req, res) => {
 
 //get post
 
-router.get('/user/:userId',verifyToken, async (req, res) => {
-  try {
-    const posts = await post.find({userId: req.params.userId});
-    res.status(200).json(posts);
-  } catch (err) {
-    res.status(500).json("Internal server error");
-  }
-});
 
 //search posts by title
 

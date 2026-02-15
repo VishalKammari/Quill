@@ -42,11 +42,11 @@ function Home() {
         <h3 className="w-full text-center font-bold mt-6">No results found</h3>
       ) : (
         posts.map((post) => (
-          posts.map((post) => (
+          
           <Link key={post._id} to={user ? `/posts/post/${post._id}` : `/login`} className="block">
             <HomePosts post={post} />
            </Link>
-          ))
+          
         ))
       )}
     </div>

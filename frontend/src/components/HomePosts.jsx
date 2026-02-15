@@ -1,4 +1,5 @@
 import React from 'react'
+import { ImageFolder } from '../url';
 
 function HomePosts({ post }) {
   return (
@@ -8,7 +9,7 @@ function HomePosts({ post }) {
         {/* Left div (Image) */}
         <div className="flex justify-center items-center overflow-hidden rounded-lg md:w-[40%]">
           <img
-            src={post.photo}
+            src={ImageFolder+post.photo}
             alt="post"
             className="w-full h-full object-cover aspect-[16/9] rounded-lg"
           />
