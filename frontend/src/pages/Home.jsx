@@ -17,9 +17,7 @@ function Home() {
     const fetchPosts = async () => {
       setloader(true);
       try {
-        const endpoint = search
-          ? `${URL}api/posts/${search}`
-          : `${URL}api/posts`;
+        const endpoint = search? `${URL}api/posts/${search}`: `${URL}api/posts`;
 
         const res = await axios.get(endpoint, {
           withCredentials: true,

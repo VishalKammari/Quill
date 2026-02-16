@@ -69,7 +69,8 @@ const Navbar = () => {
           {user ? (
             <>
               <Link to="/write">Write</Link>
-              <Link to="/profile">Profile</Link>
+              <Link to={"/profile/"+user.id}>Profile</Link>
+              <Link to={"/Myblogs/"+user.id}>My Blogs</Link>
               <button
                 onClick={handleLogout}
                 className="text-red-500 hover:text-red-600 cursor-pointer"
@@ -100,7 +101,8 @@ const Navbar = () => {
           {user ? (
             <>
               <Link to="/write" onClick={() => setOpen(false)}>Write</Link>
-              <Link to="/profile" onClick={() => setOpen(false)}>Profile</Link>
+              <Link to={"/profile/"+user.id} onClick={() => setOpen(false)}>Profile</Link>
+              <Link to={"/Myblogs/"+user.id} onClick={() => setOpen(false)}>My Blogs</Link>
               <button
                 onClick={handleLogout}
                 className="text-red-500 text-left"

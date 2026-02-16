@@ -43,9 +43,13 @@ router.post('/login', async (req, res) => {
     const { password: pwd, ...others } = user1._doc;
 
     res
-      .cookie("token", token)
-      .status(200)
-      .json(others);
+  .cookie("token", token, {
+    httpOnly: true,
+    secure: false,     
+    sameSite: "lax"
+  })
+  .status(200)
+  .json(others);
   } catch (err) {
     res.status(500).json("Internal server error");
   }
