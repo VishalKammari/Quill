@@ -18,7 +18,8 @@ function Postdetails() {
   const {user}=useContext(UserContext);
   const[loader,setloader]=useState(false);
   const navigate=useNavigate();
-  const [comments,setComments]=useState([])
+  const [comments,setComments]=useState([]);
+  const [comment,setComment]=useState("");
 
   useEffect(() => {
     setloader(true);
@@ -27,11 +28,11 @@ function Postdetails() {
         const res = await axios.get(
           `${URL}api/posts/${id}`
         );
-        console.log(res.data);
+        // console.log(res.data);
         setPost(res.data);
         setloader(false);
       } catch (err) {
-        console.error(err.response?.data || err.message);
+        console.error(err);
       }
     };
 
@@ -45,7 +46,6 @@ function Postdetails() {
       const res=await axios.get(URL+"api/comments/posts/"+id ,{withCredentials:true})
       setComments(res.data)
       setloader(false)
-
     }
     catch(err){
       setloader(false)
@@ -69,7 +69,7 @@ function Postdetails() {
     const handleDeletepost=async()=>{
       try{
         const res=await axios.delete(`${URL}api/posts/${id}`,{withCredentials:true})
-        console.log(res.data)
+        //console.log(res.data)
         navigate("/")
       }
       catch(err){
@@ -81,17 +81,16 @@ function Postdetails() {
     e.preventDefault()
     try{
       const res=await axios.post(URL+"api/comments/create",
-      {comment:comments,author:user.username,postId:id,userId:user.id},
+      {comment:comment,author:user.username,postId:id,userId:user.id},
       {withCredentials:true})
-    
-      window.location.reload(true)
-
+      setComments((prevComments) => [...prevComments, res.data]);
+      setComment("");
     }
     catch(err){
          console.log(err)
     }
 
-  }
+    }
 
   return (
     <div className="px-4 md:px-6 md:w-[65%] mx-auto my-8">
@@ -102,9 +101,10 @@ function Postdetails() {
           <h1 className="text-xl md:text-3xl font-bold text-gray-800 leading-snug">
           {post.title}
         </h1>
+
         {user.id === post.userId &&
         <div className='flex items-center justify-between space-x-4'>
-           <CiEdit onClick={()=>navigate('/edit'+id)} className='text-2xl cursor-pointer hover:text-blue-600 ' />
+           <CiEdit onClick={()=>navigate('/edit/'+id)} className='text-2xl cursor-pointer hover:text-blue-600 ' />
             <MdDeleteForever onClick={handleDeletepost} className='text-2xl cursor-pointer hover:text-red-600 ' /> 
         </div>
         }
@@ -160,7 +160,7 @@ function Postdetails() {
       </div>}
 
       <div className="w-full flex flex-col mt-4 md:flex-row">
-          <input onChange={(e)=>setComments(e.target.value)} type="text" placeholder="Write a comment" className="md:w-[80%] outline-none py-2 px-4 mt-4 md:mt-0"/>
+          <input value={comment} onChange={(e)=>setComment(e.target.value)} type="text" placeholder="Write a comment" className="md:w-[80%] outline-none py-2 px-4 mt-4 md:mt-0"/>
           <button onClick={postComment} className="bg-black text-sm text-white px-2 py-2 md:w-[20%] mt-4 md:mt-0">Add Comment</button>
       </div>
     </div>
