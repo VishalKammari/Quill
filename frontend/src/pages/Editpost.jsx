@@ -99,36 +99,98 @@ const editPost = () => {
 
     
   return (
-    <div className='md:max-w-[70%] mx-4 md:mx-auto mt-8'>
-            <h1 className='font-bold md:text-2xl text-xl mt-8'>Update a Post</h1>
-            <form action="" className='w-full flex flex-col space-y-4 md:space-y-8 m-4'>
-                <input onChange={(e)=>setTitle(e.target.value)} value={title} type="text" placeholder='Enter Post Title' className='px-4 py-2 outline-none' />
-                <div>
-                    <input onChange={(e)=>setFile(e.target.files[0])} type="file" className="file:mr-3 file:rounded-md file:border file:border-gray-600 file:bg-transparent file:px-3 file:py-1.5 file:text-sm hover:file:text-white hover:file:bg-gray-800 text-sm text-gray-500" />
-                </div>
-                <div className='flex flex-col '>
-                    <div className='flex item-center space-x-4 md:space-x-8'>
-                        <div className='flex items-center space-x-4 md:space-x-8'>
-                            <input type="text" className='px-4 py-2 outline-none ' value={cat} onChange={(e)=>setCat(e.target.value)} placeholder='Enter Post Category' />
-                            <div onClick={() => addCategory()} className='bg-black text-white px-2 py-1 cursor-pointer rounded-xl hover:bg-gray-700'>Add</div>
-                        </div>
-                        {/* categories */}
-                        <div className='flex px-4 mt-3 items-center space-x-4 md:space-x-8 overflow-x-auto'>
-                            {cats?.map((c,i)=>(
-                                <div key={i} className='flex justify-center items-center space-x-2 mr-4 bg-gray-200 px-2 py-1 rounded-md '>
-                                <p>{c}</p>
-                                <p onClick={() => deleteCategory(i)} className='text-white bg-black rounded-full cursor-pointer p-1 text-sm'><ImCross /></p>
-                                </div>
-                            ))}
-                        </div>
-                        
-                    </div>
-                </div>
+    <div className="w-full px-4 sm:px-6 md:max-w-[70%] md:mx-auto mt-6 md:mt-10">
+  <h1 className="font-bold text-2xl md:text-3xl text-center md:text-left mb-6">
+    Update Post
+  </h1>
+
+  <form className="w-full flex flex-col gap-5 md:gap-8">
     
-                <textarea onChange={(e)=>setDesc(e.target.value)} value={desc} name="" rows={10} cols={30} id="" className='px-4 py-2 outline-none bg-gray-200 rounded-md' placeholder='Enter Post Description'></textarea>
-                <button onClick={handleUpdate} className='bg-black text-white px-4 py-2 rounded-xl hover:bg-gray-700'>Update</button>
-            </form>
-        </div>
+    {/* Title */}
+    <input
+      onChange={(e) => setTitle(e.target.value)}
+      value={title}
+      type="text"
+      placeholder="Enter Post Title"
+      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none"
+    />
+
+    {/* File Upload */}
+    <div>
+      <input
+        onChange={(e) => setFile(e.target.files[0])}
+        type="file"
+        className="w-full text-sm text-gray-500
+        file:mr-4 file:rounded-lg file:border-0
+        file:bg-black file:text-white
+        file:px-4 file:py-2
+        hover:file:bg-gray-800"
+      />
+    </div>
+
+    {/* Category Section */}
+    <div className="flex flex-col gap-4">
+
+      {/* Input + Add Button */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <input
+          type="text"
+          value={cat}
+          onChange={(e) => setCat(e.target.value)}
+          placeholder="Enter Post Category"
+          className="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none"
+        />
+
+        <button
+          type="button"
+          onClick={addCategory}
+          className="bg-black text-white px-4 py-3 rounded-xl hover:bg-gray-700 transition"
+        >
+          Add
+        </button>
+      </div>
+
+      {/* Category Chips */}
+      <div className="flex flex-wrap gap-3">
+        {cats?.map((c, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-full"
+          >
+            <p className="text-sm">{c}</p>
+            <button
+              type="button"
+              onClick={() => deleteCategory(i)}
+              className="bg-black text-white rounded-full p-1 text-xs hover:bg-gray-700"
+            >
+              <ImCross />
+            </button>
+          </div>
+        ))}
+      </div>
+
+    </div>
+
+    {/* Description */}
+    <textarea
+      onChange={(e) => setDesc(e.target.value)}
+      value={desc}
+      rows={8}
+      placeholder="Enter Post Description"
+      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none"
+    />
+
+    {/* Update Button */}
+    <button
+      type="button"
+      onClick={handleUpdate}
+      className="w-full bg-black text-white py-3 rounded-xl hover:bg-gray-800 transition"
+    >
+      Update Post
+    </button>
+
+  </form>
+</div>
   )
 }
 
