@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const user = require('../Models/user');
-const post = require('../Models/post');
+const post = require('../Models/Post');
 const comment = require('../Models/comment');
 const bcrypt = require('bcrypt');
 const verifyToken = require('../verifytoken');
@@ -51,5 +51,6 @@ router.get('/:id',verifyToken, async (req, res) => {
     res.status(500).json("Internal server error");
   }
 });
+
 
 module.exports = router;
