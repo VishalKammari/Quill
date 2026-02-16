@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const user = require('../Models/user');
 const post = require('../Models/Post');
-const comment = require('../Models/comment');
+const comment = require('../Models/Comment');
 const bcrypt = require('bcrypt');
 const verifyToken = require('../verifytoken');
 
