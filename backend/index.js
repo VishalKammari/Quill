@@ -8,10 +8,28 @@ const multer = require('multer');
 const path=require("path")
 app.use("/images",express.static(path.join(__dirname,"/images")))
 
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://quill-hbv46kz65-visha9764s-projects.vercel.app"
+];
+
 app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error("CORS not allowed"), false);
+    }
+
+    return callback(null, true);
+  },
+  credentials: true
 }));
+
+
+
+
 app.use(express.json());
 app.use(cookieParser());
 const connectDb = require('./db');
