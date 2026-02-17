@@ -10,8 +10,9 @@ app.use("/images",express.static(path.join(__dirname,"/images")))
 
 
 const allowedOrigins = [
-  "http://localhost:5173",
-  "https://quill-hbv46kz65-visha9764s-projects.vercel.app"
+  "https://quill-git-main-visha9764s-projects.vercel.app",
+  "quill-tan-nine.vercel.app",
+  "https://quill-bp03sa5ys-visha9764s-projects.vercel.app"
 ];
 
 app.use(cors({
